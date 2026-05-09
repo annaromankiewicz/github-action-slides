@@ -1,662 +1,307 @@
 ---
-# try also 'default' to start simple
-theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
+theme: default
+title: GitHub Actions in 5 Minutes
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply UnoCSS classes to the current slide
+  ## GitHub Actions — a 5-minute introduction
+  CI/CD, workflow anatomy, and limitations for informatics students.
 class: text-center
-# https://sli.dev/features/drawing
-drawings:
-  persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
-# enable Comark Syntax: https://comark.dev/syntax/markdown
-comark: true
-# duration of the presentation
-duration: 35min
+mdc: true
+duration: 5min
+colorSchema: dark
+fonts:
+  sans: Inter
+  mono: JetBrains Mono
 ---
 
-# Welcome to Slidev
+# GitHub Actions
 
-Presentation slides for developers
+### CI/CD where your code already lives
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
+<div class="abs-bl m-6 text-sm opacity-60">
+  A 5-minute tour · for informatics students
 </div>
 
 <div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
-  </a>
+  <carbon:logo-github />
 </div>
 
+<style>
+:root {
+  --slidev-theme-primary: #2da44e;
+}
+h1 {
+  background: linear-gradient(90deg, #2da44e 0%, #8957e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+</style>
+
 <!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
+Welcome — five minutes, eight slides. We'll start with the *why* (CI/CD), see what GitHub Actions actually is, write a workflow file together, then close with what it can't do well. Keep it brisk: roughly 30–40 seconds per slide except the YAML walkthrough, which gets 90 seconds.
 -->
 
 ---
 transition: fade-out
 ---
 
-# What is Slidev?
+# Why CI/CD?
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+<v-clicks>
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
+- **Continuous Integration** — every commit is automatically built and tested.
+- **Continuous Delivery / Deployment** — green builds flow toward production without manual steps.
+- It exists to kill three classic pains: <span v-mark.underline.orange="3">"works on my machine"</span>, broken `main`, and risky manual releases.
 
-Read more about [Why Slidev?](https://sli.dev/guide/why)
+</v-clicks>
 
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
+<div v-click="4" class="mt-8">
 
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
+```mermaid {scale: 0.7, theme: 'dark'}
+flowchart LR
+  A[Code] --> B[Build]
+  B --> C[Test]
+  C --> D[Deploy]
+  D --> E[Monitor]
+  E -.feedback.-> A
+```
+
+</div>
 
 <!--
-Here is another comment.
+CI/CD is the loop you want around every codebase. CI = automatically build and test on every commit. CD = automatically ship the green builds. The motivation is concrete: it eliminates the "works on my machine" excuse, prevents broken `main`, and replaces stressful manual deploys with boring automation. Show the loop — that's the workflow we're going to automate. ~40 seconds.
 -->
-
----
-transition: slide-up
-level: 2
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                     |                             |
-| --------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                 | next animation or slide     |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                       | previous slide              |
-| <kbd>down</kbd>                                     | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
 
 ---
 layout: two-cols
-layoutClass: gap-16
+layoutClass: gap-12
 ---
 
-# Table of contents
+# Enter GitHub Actions
 
-You can use the `Toc` component to generate a table of contents for your slides:
+GitHub's built-in CI/CD platform.
 
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
+<v-clicks>
 
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
+- **Native to your repo** — lives in `.github/workflows/`
+- **Event-driven** — triggered by pushes, PRs, releases, schedules…
+- **Free for public repos**, generous tier for private
+- **Reusable building blocks** from the Marketplace
+
+</v-clicks>
 
 ::right::
 
-<Toc text-sm minDepth="1" maxDepth="2" />
+<div class="mt-12">
 
----
-layout: image-right
-image: https://cover.sli.dev
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
+```yaml {all|2}
+name: CI
+on: [push, pull_request]
 ```
 
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
+<div v-click class="text-sm opacity-70 mt-4">
+The <code>on:</code> key answers <strong>"when does this run?"</strong>
+</div>
 
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
+</div>
 
 <!--
-Notes can also sync with clicks
+GitHub Actions is GitHub's own CI/CD service — no extra accounts, no separate dashboard. Workflows are YAML files committed in `.github/workflows/`. They're event-driven: a push, a PR, a tag, a cron schedule, even an issue comment can trigger them. Free for public repos. The Marketplace gives you thousands of reusable steps so you rarely write shell from scratch. ~30 seconds.
+-->
 
-[click] This will be highlighted after the first click
+---
 
-[click] Highlighted with `count = ref(0)`
+# What can you automate?
 
-[click:3] Last click (skip two clicks)
+<div class="grid grid-cols-2 gap-6 mt-8">
+
+<div v-click class="p-4 rounded border border-green-500/30 bg-green-500/5">
+  <div class="text-2xl"><carbon:test-tool /></div>
+  <div class="font-bold mt-1">Tests & linting</div>
+  <div class="text-sm opacity-70">on every push and PR</div>
+</div>
+
+<div v-click class="p-4 rounded border border-green-500/30 bg-green-500/5">
+  <div class="text-2xl"><carbon:build-tool /></div>
+  <div class="font-bold mt-1">Builds & artifacts</div>
+  <div class="text-sm opacity-70">binaries, Docker images, bundles</div>
+</div>
+
+<div v-click class="p-4 rounded border border-purple-500/30 bg-purple-500/5">
+  <div class="text-2xl"><carbon:deploy /></div>
+  <div class="font-bold mt-1">Deploys</div>
+  <div class="text-sm opacity-70">GitHub Pages, AWS, Vercel, …</div>
+</div>
+
+<div v-click class="p-4 rounded border border-purple-500/30 bg-purple-500/5">
+  <div class="text-2xl"><carbon:bot /></div>
+  <div class="font-bold mt-1">Repo automation</div>
+  <div class="text-sm opacity-70">label PRs, close stale issues, cron jobs</div>
+</div>
+
+</div>
+
+<!--
+Four buckets students will recognize. Tests and linting on every PR — the bread and butter. Builds and artifacts — produce the binary or Docker image, attach it to a release. Deploys — push to Pages, a cloud provider, or your university's server. And repo automation — labeling PRs, closing stale issues, nightly scheduled tasks. Anything you can do in a shell, you can do here. ~30 seconds.
 -->
 
 ---
 level: 2
 ---
 
-# Shiki Magic Move
+# Anatomy of a workflow
 
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
+A workflow grows in five small steps. Same file, click to evolve.
 
 ````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
+```yaml {*|1-2}
+name: CI
+on: [push, pull_request]
 ```
 
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
+```yaml {*|3-5}
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
 ```
 
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
+```yaml {*|7-8}
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 ```
 
-Non-code blocks are ignored.
+```yaml {*|9-12}
+name: CI
+on: [push, pull_request]
 
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-}
-</script>
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+```
+
+```yaml {*|13-14}
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
 ```
 ````
 
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>`, `<BlueSky/>`, and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
 <!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
+The centerpiece — give it 90 seconds.
 
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
+1. `name` and `on:` — *when* does it run? On any push or pull request.
+2. Add a `job` and `runs-on:` — *where* does it run? GitHub spins up a fresh Ubuntu VM.
+3. Add `steps:` with `actions/checkout@v4` — the very first step almost always grabs your code. Notice `uses:` — we're invoking a reusable action.
+4. Add `actions/setup-node@v4` with `with:` — actions take parameters. Here we pin Node 20.
+5. Finally, `run:` — your own shell commands. Install, then test.
+
+Thirteen lines. That's a real CI pipeline. Push the file to `.github/workflows/ci.yml` and the next PR runs it.
 -->
 
 ---
-class: px-20
+layout: two-cols
+layoutClass: gap-12
 ---
 
-# Themes
+# Runners & the Marketplace
 
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
+<v-clicks>
 
-<div grid="~ cols-2 gap-2" m="t-2">
+- **Runners** = the VMs that execute your jobs
+  - GitHub-hosted: Linux, macOS, Windows
+  - Or self-hosted, on your own hardware
+- **Marketplace** = thousands of reusable `uses:` actions
+- **Secrets** keep tokens out of YAML
+
+</v-clicks>
+
+::right::
+
+<div class="mt-12">
 
 ```yaml
----
-theme: default
----
-```
+- uses: actions/setup-python@v5
+  with:
+    python-version: '3.12'
 
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
-
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you press <kbd>space</kbd> or <kbd>right</kbd>, or click outside the slide on the right.
-
-```html
-<div v-click>This shows up when you trigger a click animation.</div>
+- name: Deploy
+  env:
+    TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+  run: ./deploy.sh
 ```
 
 </div>
 
-<p v-click>
-You can also add modifiers to change the animation:
-</p>
-
-<div class="grid gap-3 mt-4 text-sm" style="grid-template-columns: repeat(3, 1fr) 1.5fr 1fr">
-  <div v-after.up class="p-3 rounded border border-primary/20 bg-primary/10">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.up</div>
-    <div>Slide from bottom</div>
-  </div>
-  <div v-click.fade-in class="p-3 rounded border border-primary/30 bg-primary/15">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade-in</div>
-    <div>Fade in</div>
-  </div>
-  <div v-click.fade class="p-3 rounded border border-primary/40 bg-primary/20">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade</div>
-    <div>Dim (0.5 opacity)</div>
-  </div>
-  <div v-click.fade.right.scale class="p-3 rounded border border-primary/50 bg-primary/25">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade.right.scale</div>
-    <div>Composed</div>
-  </div>
-  <div v-click.none class="p-3 rounded border border-primary/60 bg-primary/30">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.none</div>
-    <div>No transition</div>
-  </div>
-</div>
-
-<v-click>
-
-The <span v-mark.red="7"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="8">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
-
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
-
-</v-click>
-
-<div v-click mt-12>
-
-[Learn more](https://sli.dev/guide/animations#click-animation)
-
-</div>
+<!--
+Two pieces worth naming. *Runners* are the machines — GitHub gives you fresh Linux, macOS, and Windows VMs for free; you can also self-host if you need GPUs or special networks. The *Marketplace* is the package registry of CI: thousands of community actions you reference with `uses:`. And `secrets` — never paste tokens in YAML; store them in repo settings and read them via `${{ secrets.X }}`. ~30 seconds.
+-->
 
 ---
 
-# Motions
+# Limitations & gotchas
 
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
+<v-clicks>
 
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
-</div>
-```
+- 💸 **Minutes cost money on private repos** — 2,000 free/month, then per-minute billing.
+- 🔒 **Vendor lock-in** — workflows don't run outside GitHub (partial workaround: [`act`](https://github.com/nektos/act)).
+- 🐛 **Painful debugging** — no local step-through. You push commits to test, watch logs, push again.
+- 📐 **YAML pitfalls** — indentation matters, no type checking, secrets leak into logs if you `echo` them.
+- ⚠️ **Supply-chain risk** — `uses: some-action@v1` follows a moving tag. Pin to a commit SHA for security-critical jobs.
+- 🥶 **Cold starts** — every job boots a fresh VM (~10–30 s overhead).
 
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
+</v-clicks>
 
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
-
-</div>
-
----
-
-# $\LaTeX$
-
-$\LaTeX$ is supported out-of-box. Powered by [$\KaTeX$](https://katex.org/).
-
-<div h-3 />
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
-$$
-
-[Learn more](https://sli.dev/features/latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
-
----
-foo: bar
-dragPos:
-  square: 620,52,167,_,-16
----
-
-# Draggable Elements
-
-Double-click on the draggable elements to edit their positions.
-
-<br>
-
-###### Directive Usage
-
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
-
-<br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="663,206,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
-  </div>
-</v-drag>
-
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
-
----
-src: ./pages/imported-slides.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Monaco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import { emptyArray } from './external'
-
-const arr = ref(emptyArray(10))
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from 'vue'
-import { emptyArray, sayHello } from './external'
-
-sayHello()
-console.log(`vue ${version}`)
-console.log(emptyArray<number>(10).reduce(fib => [...fib, fib.at(-1)! + fib.at(-2)!], [1, 1]))
-```
+<!--
+Be honest about the trade-offs. Minutes are free for public repos but metered for private — at scale the bill shows up. Workflows are GitHub-specific; migrating to GitLab or Jenkins means a rewrite. Debugging is the biggest day-to-day frustration: there's no breakpoint, you commit-push-watch-repeat. YAML has no type system and no compiler, so a typo fails after the VM has already booted. The supply-chain point matters: `@v1` is a moving tag — for security-sensitive workflows pin to a commit SHA. And every job pays a cold-start tax. ~45 seconds.
+-->
 
 ---
 layout: center
 class: text-center
 ---
 
-# Learn More
+# That's it.
 
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
+When it shines: anything already on GitHub, especially open source.
 
-<PoweredBySlidev mt-10 />
+<div class="mt-8 text-sm opacity-70">
+  📚 <a href="https://docs.github.com/actions" target="_blank">docs.github.com/actions</a>
+  ·
+  🛒 <a href="https://github.com/marketplace?type=actions" target="_blank">Marketplace</a>
+  ·
+  🧪 <a href="https://github.com/nektos/act" target="_blank">nektos/act</a> (run locally)
+</div>
+
+<div class="mt-16 text-xs opacity-40">
+  Questions?
+</div>
+
+<!--
+Five minutes, one workflow file, and a sense of when GitHub Actions is the right tool: when your code already lives on GitHub, especially for open source where it's free. Three links to take home — the official docs, the Marketplace for reusable actions, and `act` for running workflows locally. Open the floor for questions.
+-->
