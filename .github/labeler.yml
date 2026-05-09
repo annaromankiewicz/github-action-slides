@@ -1,0 +1,22 @@
+documentation:
+  - '**/*.md'
+
+workflows:
+  - '.github/workflows/**'
+
+slides:
+  - 'slides.md'
+  - 'pages/**'
+  - 'snippets/**'
+
+components:
+  - 'components/**'
+
+dependencies:
+  - 'package.json'
+  - 'pnpm-lock.yaml'
+  - 'pnpm-workspace.yaml'
+
+config:
+  - 'netlify.toml'
+  - 'vercel.json'
