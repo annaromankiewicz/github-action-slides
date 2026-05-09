@@ -398,7 +398,7 @@ Push this to `.github/workflows/ci.yml` and the next PR runs it. ~90 seconds.
 
 ---
 
-# Limitations
+# New Limitations
 
 <div class="limitations">
 <br>
