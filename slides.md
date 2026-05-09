@@ -1,7 +1,6 @@
 ---
 theme: default
 title: GitHub Actions 
-base: /github-actions-slides/
 info: |
   ## GitHub Actions — a 5-minute introduction
   CI/CD, workflow anatomy, and limitations for informatics students.
