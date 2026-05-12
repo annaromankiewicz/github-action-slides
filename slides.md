@@ -40,7 +40,7 @@ h1 {
 </style>
 
 <!--
-Welcome — five minutes, nine slides. We motivate (CI/CD), tease use cases, define the vocabulary, see the pieces connect, then walk a real YAML file. Close with the rough edges. Roughly 30 seconds per slide; the YAML walkthrough takes the most.
+Willkommen — fünf Minuten, neun Folien. Wir motivieren (CI/CD), zeigen Anwendungsfälle, definieren das Vokabular, sehen, wie die Teile zusammenpassen, und gehen dann ein echtes YAML-File durch. Zum Abschluss die Schwachstellen. Etwa 30 Sekunden pro Folie; der YAML-Durchgang dauert am längsten.
 -->
 
 ---
@@ -68,7 +68,7 @@ flowchart LR
 </div>
 
 <!--
-CI/CD is the loop you want around every codebase. CI = automatically build and test on every commit. CD = automatically ship the green builds. It eliminates the "works on my machine" excuse, prevents broken `main`, and replaces stressful manual deploys with boring automation. That loop is exactly what we'll automate. ~35 seconds.
+CI/CD ist der Kreislauf, den man um jede Codebasis haben möchte. CI = bei jedem Commit automatisch bauen und testen. CD = grüne Builds automatisch ausliefern. Das räumt mit der "läuft bei mir aber"-Ausrede auf, verhindert ein kaputtes `main` und ersetzt stressige manuelle Deployments durch langweilige Automatisierung. Genau diesen Kreislauf werden wir automatisieren. ~35 Sekunden.
 -->
 
 ---
@@ -107,7 +107,7 @@ CI/CD is the loop you want around every codebase. CI = automatically build and t
 </div>
 
 <!--
-Four buckets in 20 seconds: tests & linting on every PR, builds & artifacts (binaries, Docker images), deploys (Pages, cloud), and repo automation (label PRs, cron jobs, stale-issue bots). Anything you can do in a shell, you can do here.
+Vier Kategorien in 20 Sekunden: Tests & Linting bei jedem PR, Builds & Artefakte (Binaries, Docker-Images), Deployments (Pages, Cloud) und Repo-Automatisierung (PRs labeln, Cron-Jobs, Stale-Issue-Bots). Alles, was in einer Shell läuft, läuft auch hier.
 -->
 
 ---
@@ -145,7 +145,7 @@ Four buckets in 20 seconds: tests & linting on every PR, builds & artifacts (bin
 </div>
 
 <!--
-Four terms describe the *structure* of every workflow. An event triggers a workflow; a workflow groups jobs; jobs are sequences of steps; a step is either a shell command or a reusable action. Read these once — we'll see all four in YAML in two slides. ~35 seconds.
+Vier Begriffe beschreiben die *Struktur* jedes Workflows. Ein Event löst einen Workflow aus; ein Workflow gruppiert Jobs; Jobs sind Sequenzen von Steps; ein Step ist entweder ein Shell-Befehl oder eine wiederverwendbare Action. Einmal durchlesen — wir sehen alle vier in zwei Folien im YAML. ~35 Sekunden.
 -->
 
 ---
@@ -181,7 +181,7 @@ Four terms describe the *structure* of every workflow. An event triggers a workf
 </div>
 
 <!--
-Three more terms cover *where* it runs. Actions are reusable building blocks. Runners are the machines — GitHub gives you fresh Linux, macOS, or Windows VMs free for public repos; self-host if you need GPUs or your university's network. The Marketplace is the package registry where every `uses:` line resolves to community code. And secrets — never paste tokens, reference them by name. ~35 seconds.
+Drei weitere Begriffe beschreiben, *wo* es läuft. Actions sind wiederverwendbare Bausteine. Runner sind die Maschinen — GitHub stellt frische Linux-, macOS- oder Windows-VMs bereit, kostenlos für öffentliche Repos; self-hosted, wenn man GPUs oder das Uni-Netz braucht. Der Marketplace ist die Paket-Registry, in der jede `uses:`-Zeile auf Community-Code verweist. Und Secrets — niemals Tokens einfügen, sondern per Name referenzieren. ~35 Sekunden.
 -->
 
 ---
@@ -289,7 +289,7 @@ flowchart LR
 </div>
 
 <!--
-The five terms in one picture. An event triggers a workflow, which spins up runners — each runner executes one job, a sequence of steps. Important: in this example the deploy job *needs* test, so they're NOT parallel. [click] First the test runner finishes. [click] Then the deploy runner starts. Drop the `needs:` and they'd run side-by-side. ~40 seconds.
+Die fünf Begriffe in einem Bild. Ein Event löst einen Workflow aus, der Runner startet — jeder Runner führt einen Job aus, also eine Sequenz von Steps. Wichtig: In diesem Beispiel *braucht* (`needs`) der Deploy-Job den Test-Job, daher laufen sie NICHT parallel. [click] Zuerst läuft der Test-Runner fertig. [click] Dann startet der Deploy-Runner. Ohne `needs:` würden sie nebeneinander laufen. ~40 Sekunden.
 -->
 
 ---
@@ -383,16 +383,16 @@ jobs:
 ````
 
 <!--
-The centerpiece. Comments do most of the work — narrate the additions:
+Das Herzstück. Die Kommentare erledigen den Großteil — die Ergänzungen erzählen:
 
-1. `name` and `on:` — *when* does it run?
-2. Add a job and `runs-on:` — *where* does it run?
-3. Add `steps:` with `actions/checkout@v4` — first step almost always grabs your code.
-4. Add `actions/setup-node@v4` with `with:` — parameterized action.
-5. Add `run:` — your own shell commands.
-6. Add a second job `deploy` with `needs: test` — that's the dotted "needs" arrow in the previous diagram. Without it, both jobs would run in parallel.
+1. `name` und `on:` — *wann* läuft es?
+2. Job und `runs-on:` hinzufügen — *wo* läuft es?
+3. `steps:` mit `actions/checkout@v4` hinzufügen — der erste Step holt fast immer den Code.
+4. `actions/setup-node@v4` mit `with:` hinzufügen — parametrisierte Action.
+5. `run:` hinzufügen — eigene Shell-Befehle.
+6. Einen zweiten Job `deploy` mit `needs: test` hinzufügen — das ist der gestrichelte "needs"-Pfeil aus dem vorherigen Diagramm. Ohne das würden beide Jobs parallel laufen.
 
-Push this to `.github/workflows/ci.yml` and the next PR runs it. ~90 seconds.
+Das nach `.github/workflows/ci.yml` pushen, und der nächste PR führt es aus. ~90 Sekunden.
 -->
 
 
@@ -417,7 +417,7 @@ Push this to `.github/workflows/ci.yml` and the next PR runs it. ~90 seconds.
 </style>
 
 <!--
-Be honest about the trade-offs. Minutes — free for public repos, metered for private; at scale the bill shows up. Vendor lock-in — workflows are GitHub-specific; switching to GitLab or Jenkins means a rewrite. Debugging is the biggest daily frustration: no breakpoint, you commit-push-watch-repeat. The supply-chain point matters: `@v1` is a moving tag — for security-sensitive workflows pin to a commit SHA. (Worth knowing if there's time: YAML has no type checking, and every job pays a 10–30 s cold-start tax.) ~30 seconds.
+Ehrlich zu den Trade-offs: Minuten — kostenlos für öffentliche Repos, abgerechnet für private; bei Skalierung kommt die Rechnung. Vendor-Lock-in — Workflows sind GitHub-spezifisch; ein Wechsel zu GitLab oder Jenkins bedeutet eine Neuentwicklung. Debugging ist die größte alltägliche Frustration: kein Breakpoint, sondern commit-push-watch-repeat. Der Supply-Chain-Punkt zählt: `@v1` ist ein beweglicher Tag — bei sicherheitskritischen Workflows besser auf einen Commit-SHA pinnen. (Falls Zeit bleibt erwähnenswert: YAML hat keine Typprüfung, und jeder Job zahlt 10–30 s Cold-Start-Zeit.) ~30 Sekunden.
 -->
 
 ---
@@ -425,22 +425,27 @@ layout: center
 class: text-center
 ---
 
-# That's it.
+# Sources
 
-When it shines: anything already on GitHub, especially open source.
+<div class="mt-8 text-sm opacity-80 text-left mx-auto" style="max-width: 720px">
 
-<div class="mt-8 text-sm opacity-70">
-  📚 <a href="https://docs.github.com/actions" target="_blank">docs.github.com/actions</a>
-  ·
-  🛒 <a href="https://github.com/marketplace?type=actions" target="_blank">Marketplace</a>
-  ·
-  🧪 <a href="https://github.com/nektos/act" target="_blank">nektos/act</a> (run locally)
+**Documentation**
+
+- 📄 [Using custom workflows with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+- 🚀 [GitHub Pages — Quickstart](https://docs.github.com/en/pages/quickstart)
+- ⚙️ [GitHub Actions — Quickstart](https://docs.github.com/en/actions/get-started/quickstart)
+
+**Inspiration**
+
+- 🎓 [mrckurz/pdf-magic — `.github/workflows/deploy.yml`](https://github.com/mrckurz/pdf-magic/blob/main/.github/workflows/deploy.yml)<br>
+  <span class="text-xs opacity-60">Prof. Kurz's repo — reference for building this GitHub Pages workflow</span>
+
 </div>
 
-<div class="mt-16 text-xs opacity-40">
+<div class="mt-12 text-xs opacity-40">
   Questions?
 </div>
 
 <!--
-Five minutes, one workflow file, and a sense of when GitHub Actions is the right tool: when your code already lives on GitHub, especially for open source where it's free. Three links to take home — official docs, the Marketplace, and `act` for running workflows locally. Open the floor.
+Quellen-Folie — drei offizielle Doku-Seiten, die bei der Vorbereitung dieses Vortrags verwendet wurden (Custom Workflow für GitHub Pages, Pages Quickstart, Actions Quickstart), plus das `pdf-magic`-Repo von Prof. Kurz, das als Vorlage für den Deployment-Workflow dieser Präsentation selbst gedient hat. Raum für Fragen öffnen.
 -->
