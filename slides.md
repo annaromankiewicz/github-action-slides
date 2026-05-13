@@ -39,9 +39,6 @@ h1 {
 }
 </style>
 
-<!--
-Willkommen — fünf Minuten, neun Folien. Wir motivieren (CI/CD), zeigen Anwendungsfälle, definieren das Vokabular, sehen, wie die Teile zusammenpassen, und gehen dann ein echtes YAML-File durch. Zum Abschluss die Schwachstellen. Etwa 30 Sekunden pro Folie; der YAML-Durchgang dauert am längsten.
--->
 
 ---
 transition: fade-out
@@ -67,9 +64,6 @@ flowchart LR
 
 </div>
 
-<!--
-CI/CD ist der Kreislauf, den man um jede Codebasis haben möchte. CI = bei jedem Commit automatisch bauen und testen. CD = grüne Builds automatisch ausliefern. Das räumt mit der "läuft bei mir aber"-Ausrede auf, verhindert ein kaputtes `main` und ersetzt stressige manuelle Deployments durch langweilige Automatisierung. Genau diesen Kreislauf werden wir automatisieren. ~35 Sekunden.
--->
 
 ---
 
@@ -106,9 +100,6 @@ CI/CD ist der Kreislauf, den man um jede Codebasis haben möchte. CI = bei jedem
 
 </div>
 
-<!--
-Vier Kategorien in 20 Sekunden: Tests & Linting bei jedem PR, Builds & Artefakte (Binaries, Docker-Images), Deployments (Pages, Cloud) und Repo-Automatisierung (PRs labeln, Cron-Jobs, Stale-Issue-Bots). Alles, was in einer Shell läuft, läuft auch hier.
--->
 
 ---
 
@@ -144,9 +135,6 @@ Vier Kategorien in 20 Sekunden: Tests & Linting bei jedem PR, Builds & Artefakte
 
 </div>
 
-<!--
-Vier Begriffe beschreiben die *Struktur* jedes Workflows. Ein Event löst einen Workflow aus; ein Workflow gruppiert Jobs; Jobs sind Sequenzen von Steps; ein Step ist entweder ein Shell-Befehl oder eine wiederverwendbare Action. Einmal durchlesen — wir sehen alle vier in zwei Folien im YAML. ~35 Sekunden.
--->
 
 ---
 
@@ -180,9 +168,6 @@ Vier Begriffe beschreiben die *Struktur* jedes Workflows. Ein Event löst einen 
   <div class="text-xs"><strong class="text-amber-400">Secrets</strong> &nbsp;—&nbsp; <code v-pre>${{ secrets.X }}</code> keeps tokens out of YAML; values come from repo settings, never from the file itself.</div>
 </div>
 
-<!--
-Drei weitere Begriffe beschreiben, *wo* es läuft. Actions sind wiederverwendbare Bausteine. Runner sind die Maschinen — GitHub stellt frische Linux-, macOS- oder Windows-VMs bereit, kostenlos für öffentliche Repos; self-hosted, wenn man GPUs oder das Uni-Netz braucht. Der Marketplace ist die Paket-Registry, in der jede `uses:`-Zeile auf Community-Code verweist. Und Secrets — niemals Tokens einfügen, sondern per Name referenzieren. ~35 Sekunden.
--->
 
 ---
 
@@ -288,9 +273,6 @@ flowchart LR
 
 </div>
 
-<!--
-Die fünf Begriffe in einem Bild. Ein Event löst einen Workflow aus, der Runner startet — jeder Runner führt einen Job aus, also eine Sequenz von Steps. Wichtig: In diesem Beispiel *braucht* (`needs`) der Deploy-Job den Test-Job, daher laufen sie NICHT parallel. [click] Zuerst läuft der Test-Runner fertig. [click] Dann startet der Deploy-Runner. Ohne `needs:` würden sie nebeneinander laufen. ~40 Sekunden.
--->
 
 ---
 level: 2
@@ -382,18 +364,6 @@ jobs:
 ```
 ````
 
-<!--
-Das Herzstück. Die Kommentare erledigen den Großteil — die Ergänzungen erzählen:
-
-1. `name` und `on:` — *wann* läuft es?
-2. Job und `runs-on:` hinzufügen — *wo* läuft es?
-3. `steps:` mit `actions/checkout@v4` hinzufügen — der erste Step holt fast immer den Code.
-4. `actions/setup-node@v4` mit `with:` hinzufügen — parametrisierte Action.
-5. `run:` hinzufügen — eigene Shell-Befehle.
-6. Einen zweiten Job `deploy` mit `needs: test` hinzufügen — das ist der gestrichelte "needs"-Pfeil aus dem vorherigen Diagramm. Ohne das würden beide Jobs parallel laufen.
-
-Das nach `.github/workflows/ci.yml` pushen, und der nächste PR führt es aus. ~90 Sekunden.
--->
 
 
 ---
@@ -416,9 +386,6 @@ Das nach `.github/workflows/ci.yml` pushen, und der nächste PR führt es aus. ~
 .limitations li { margin: 0.6rem 0; }
 </style>
 
-<!--
-Ehrlich zu den Trade-offs: Minuten — kostenlos für öffentliche Repos, abgerechnet für private; bei Skalierung kommt die Rechnung. Vendor-Lock-in — Workflows sind GitHub-spezifisch; ein Wechsel zu GitLab oder Jenkins bedeutet eine Neuentwicklung. Debugging ist die größte alltägliche Frustration: kein Breakpoint, sondern commit-push-watch-repeat. Der Supply-Chain-Punkt zählt: `@v1` ist ein beweglicher Tag — bei sicherheitskritischen Workflows besser auf einen Commit-SHA pinnen. (Falls Zeit bleibt erwähnenswert: YAML hat keine Typprüfung, und jeder Job zahlt 10–30 s Cold-Start-Zeit.) ~30 Sekunden.
--->
 
 ---
 layout: center
@@ -446,6 +413,4 @@ class: text-center
   Questions?
 </div>
 
-<!--
-Quellen-Folie — drei offizielle Doku-Seiten, die bei der Vorbereitung dieses Vortrags verwendet wurden (Custom Workflow für GitHub Pages, Pages Quickstart, Actions Quickstart), plus das `pdf-magic`-Repo von Prof. Kurz, das als Vorlage für den Deployment-Workflow dieser Präsentation selbst gedient hat. Raum für Fragen öffnen.
--->
+
